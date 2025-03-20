@@ -177,7 +177,7 @@ let questions = [
     },
 
     {
-        numb: "5.10",
+        numb: 5.10,
         type: "Minor",
         question: "มีประวัติแพ้อาหารหรือนม",
         options: [
@@ -243,4 +243,39 @@ let questions = [
     }
 ];
 
+const Question21 = {
+    numb: 2.1,
+    question: "มืผื่นลักษณะนี้มานานหรือยัง",
+    options: [
+        "1-2 สัปดาห์",
+        "3-4 สัปดาห์",
+        "1-3 เดือน",
+        "3-6 เดือน"
+    ],
+    answer: ["3-6 เดือน"]
+};
+
+const questionTypes = {
+    1: "Major",
+    2: "Major",
+    2.1: "Major", // คำถาม 2.1 เพิ่มขึ้นแบบไดนามิก
+    3: "Major",
+    4: "Major",
+    5.1: "Minor",
+    5.2: "Minor",
+    5.3: "Minor",
+    5.4: "Minor",
+    5.5: "Minor",
+    5.6: "Minor",
+    5.7: "Minor",
+    5.8: "Minor",
+    5.9: "Minor",
+    5.10: "Minor",
+    5.11: "Minor",
+    5.12: "Minor",
+    5.13: "Minor",
+    5.14: "Minor",
+    5.15: "Minor"
+    // เพิ่มคำถามอื่น ๆ ตามต้องการ
+};
 

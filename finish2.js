@@ -26,9 +26,9 @@ let selectedAnswers = [];
 let selectedOption4 = []; 
 let selectMultiAns = [];
 
+
 //function แสดงคำถาม loop คำถามแต่ละข้อจากไฟล์  questions.js
 function showQuestions(index) {
-    const questionNumb = questions[index].numb
     const questionText = document.querySelector('.question-text');
     questionText.textContent = `${questions[index].question}`;
 
@@ -56,7 +56,7 @@ function showQuestions(index) {
     // ตั้งค่าสถานะที่เลือกจาก userAnswers ตาม index
     const userAnswer = userAnswers[questions[index].numb];
     if (userAnswer) {
-        if (questionNumb === 1) {
+        if (questions[index].numb === 1 || questions[index].numb === 3) {
             selectMultiAns = [];
             userAnswer.forEach(ans => {
                 const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
@@ -65,16 +65,7 @@ function showQuestions(index) {
                     selectMultiAns.push(opt);
                 }
             });
-        } else if (questionNumb === 3) {
-            selectMultiAns = [];
-            userAnswer.forEach(ans => {
-                const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
-                if (opt) {
-                    opt.style.border = "2px solid #ffd700";
-                    selectMultiAns.push(opt);
-                }
-            });
-        } else if (questionNumb === 4) {
+        } else if (questions[index].numb === 4) {
             selectedOption4 = [];
             userAnswer.forEach(ans => {
                 const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
@@ -93,7 +84,7 @@ function showQuestions(index) {
         }
 
         // กำหนดสถานะของปุ่มต่อไป
-        if (questionNumb === 1 || questionNumb === 3 || questionNumb === 4) {
+        if (questions[index].numb === 1 || questions[index].numb === 3 || questions[index].numb === 4) {
             if (Array.isArray(userAnswer) && userAnswer.length > 0) {
                 nextBtn.classList.add('active');
             } else {
@@ -233,7 +224,7 @@ function selectAnswer(option, index) {
     nextBtn.classList.add('active');
 
     // userAnswers[index] = option.textContent;
-    userAnswers[questions[index].numb] = option.querySelector('span').textContent;
+    userAnswers[index] = option.querySelector('span').textContent;
 
     if (questions[index].numb === 0) {
         year = option.textContent;
@@ -314,11 +305,11 @@ nextBtn.onclick = () => {
                 if (indexToRemove !== -1) {
                     
                     // ถ้าเคยตอบข้อ 2.1 ไปแล้ว ให้ลบคะแนนออก
-                    if (answerStatus[questions[indexToRemove].numb]) {
+                    if (answerStatus[questions[indexToRemove]]) {
                         Major--;
                         console.log("ลบคะแนนที่ได้ข้อ 2.1:") 
-                        delete answerStatus[questions[indexToRemove].numb];
-                        delete userAnswers[questions[indexToRemove].numb];
+                        delete answerStatus[questions[indexToRemove]];
+                        delete userAnswers[questions[indexToRemove]];
                     }
                     
                     // ลบข้อ 2.1 ออกจาก questions
@@ -356,7 +347,7 @@ nextBtn.onclick = () => {
             isCorrect = questionn.answer.every(ans => userAnswers[questions[questionIndex].numb].includes(ans));
         } else {
             // คำถามแบบ single answer
-            isCorrect = questionn.answer.includes(userAnswers[questions[questionIndex].numb]);
+            isCorrect = questionn.answer.includes(userAnswers[questionIndex]);
         }
 
         // การจัดการคะแนน
@@ -455,7 +446,6 @@ goHomeBtn.onclick = () => {
     Major = 0;
     userAnswers = {};
     selectedAnswer = null;
-    console.log('qeustionCount', questionCount)
     showQuestions(questionCount);
     questionCounter(questionNumb);
     

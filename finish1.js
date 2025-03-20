@@ -26,11 +26,15 @@ let selectedAnswers = [];
 let selectedOption4 = []; 
 let selectMultiAns = [];
 
+
 //function แสดงคำถาม loop คำถามแต่ละข้อจากไฟล์  questions.js
 function showQuestions(index) {
-    const questionNumb = questions[index].numb
     const questionText = document.querySelector('.question-text');
-    questionText.textContent = `${questions[index].question}`;
+    if (questions[index].numb != 0 && questions[index].type == "Major"){
+        questionText.textContent = `${questions[index].question}`;
+    } else {
+        questionText.textContent = `${questions[index].question}`;
+    }
 
     optionList.innerHTML = "";
 
@@ -53,30 +57,20 @@ function showQuestions(index) {
         }
     });
 
-    // ตั้งค่าสถานะที่เลือกจาก userAnswers ตาม index
-    const userAnswer = userAnswers[questions[index].numb];
-    if (userAnswer) {
-        if (questionNumb === 1) {
-            selectMultiAns = [];
-            userAnswer.forEach(ans => {
+    // หลังจากสร้างตัวเลือกแล้ว ให้ตั้งค่าสถานะที่เลือกจาก userAnswers
+    if (userAnswers[index]) {
+        if (questions[index].numb === 1 || questions[index].numb === 3) {
+            selectMultiAns = []; // รีเซ็ตก่อน
+            userAnswers[index].forEach(ans => {
                 const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
                 if (opt) {
                     opt.style.border = "2px solid #ffd700";
                     selectMultiAns.push(opt);
                 }
             });
-        } else if (questionNumb === 3) {
-            selectMultiAns = [];
-            userAnswer.forEach(ans => {
-                const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
-                if (opt) {
-                    opt.style.border = "2px solid #ffd700";
-                    selectMultiAns.push(opt);
-                }
-            });
-        } else if (questionNumb === 4) {
-            selectedOption4 = [];
-            userAnswer.forEach(ans => {
+        } else if (questions[index].numb === 4) {
+            selectedOption4 = []; // รีเซ็ตก่อน
+            userAnswers[index].forEach(ans => {
                 const opt = Array.from(optionList.children).find(option => option.querySelector('span').textContent === ans);
                 if (opt) {
                     opt.style.border = "2px solid #ffd700";
@@ -85,26 +79,25 @@ function showQuestions(index) {
             });
         } else {
             // สำหรับคำถามที่เป็น single answer
-            const selected = Array.from(optionList.children).find(option => option.querySelector('span').textContent === userAnswer);
+            const selected = Array.from(optionList.children).find(option => option.querySelector('span').textContent === userAnswers[index]);
             if (selected) {
                 selected.style.border = "2px solid #ffd700";
                 selectedAnswer = selected;
             }
         }
+    }
 
-        // กำหนดสถานะของปุ่มต่อไป
-        if (questionNumb === 1 || questionNumb === 3 || questionNumb === 4) {
-            if (Array.isArray(userAnswer) && userAnswer.length > 0) {
+    if (userAnswers[index]) {
+        if (questions[index].numb === 1 || questions[index].numb === 3 || questions[index].numb === 4) {
+            if (Array.isArray(userAnswers[index]) && userAnswers[index].length > 0) {
                 nextBtn.classList.add('active');
             } else {
                 nextBtn.classList.remove('active');
             }
+        } else if (userAnswers[index]) {
+            nextBtn.classList.add('active');
         } else {
-            if (userAnswer) {
-                nextBtn.classList.add('active');
-            } else {
-                nextBtn.classList.remove('active');
-            }
+            nextBtn.classList.remove('active');
         }
     } else {
         nextBtn.classList.remove('active');
@@ -151,7 +144,7 @@ function selectAnswerForQ4(option, index) {
         nextBtn.classList.remove('active');
     }
 
-    userAnswers[questions[index].numb] = selectedOption4.map(opt => opt.querySelector('span').textContent);
+    userAnswers[index] = selectedOption4.map(opt => opt.querySelector('span').textContent);
 }
 
 function selectMultipleAnswersForQ3(option, index) {
@@ -174,7 +167,7 @@ function selectMultipleAnswersForQ3(option, index) {
         nextBtn.classList.remove('active');
     }
 
-    userAnswers[questions[index].numb] = selectMultiAns.map(opt => opt.querySelector('span').textContent);
+    userAnswers[index] = selectMultiAns.map(opt => opt.querySelector('span').textContent);
 }
 
 //เลือกหลายคำตอบ ขอ้ 1
@@ -219,7 +212,8 @@ function selectMultipleAnswersForQ1(option, index) {
         nextBtn.classList.remove('active');
     }
 
-    userAnswers[questions[index].numb] = selectMultiAns.map(opt => opt.querySelector('span').textContent);
+    userAnswers[index] = selectMultiAns.map(opt => opt.querySelector('span').textContent);
+    nextBtn.classList.toggle('active', selectMultiAns.length > 0);
 } 
 
 
@@ -232,10 +226,11 @@ function selectAnswer(option, index) {
     selectedAnswer.style.border = "2px solid #ffd700";  // กำหนดสีกรอบใหม่
     nextBtn.classList.add('active');
 
+    let Article = questions[index].numb;
     // userAnswers[index] = option.textContent;
-    userAnswers[questions[index].numb] = option.querySelector('span').textContent;
+    userAnswers[index] = option.querySelector('span').textContent;
 
-    if (questions[index].numb === 0) {
+    if (Article === 0) {
         year = option.textContent;
     }
 
@@ -246,131 +241,138 @@ function selectAnswer(option, index) {
             userAnswers[index].push(answerText);
         }
     } else {
-        userAnswers[questions[index].numb] = option.querySelector('span').textContent;
+        userAnswers[index] = option.querySelector('span').textContent;
     }
 
-}
-
-function updateScore(questionIndex, isCorrect) {
-    const question = questions[questionIndex];
-    const type = questionTypes[question.numb];
-
-    if (answerStatus.hasOwnProperty(questions[questionIndex].numb)) {
-        const previousCorrectness = answerStatus[questions[questionIndex].numb];
-
-        if (previousCorrectness && !isCorrect) { // เคยถูก แต่ตอนนี้ผิด
-            if (type === "Major") {
-                Major--;
-                console.log(`Major ถูกลบ: ${Major}`);
-            } else {
-                Minor--;
-                console.log(`Minor ถูกลบ: ${Minor}`);
-            }
-        } else if (!previousCorrectness && isCorrect) { // เคยผิด แต่ตอนนี้ถูก
-            if (type === "Major") {
-                Major++;
-                console.log(`Major ถูกเพิ่ม: ${Major}`);
-            } else {
-                Minor++;
-                console.log(`Minor ถูกเพิ่ม: ${Minor}`);
-            }
-        }
-        // ไม่มีการเปลี่ยนแปลงถ้าความถูกต้องไม่เปลี่ยนแปลง
-    } else { // เป็นคำถามใหม่ (ยังไม่เคยตอบ)
-        if (isCorrect) {
-            if (type === "Major") {
-                Major++;
-                console.log(`Major ถูกเพิ่ม (ครั้งแรก): ${Major}`);
-            } else {
-                Minor++;
-                console.log(`Minor ถูกเพิ่ม (ครั้งแรก): ${Minor}`);
-            }
-        }
-    }
-
-    // alert(isCorrect)
-
-    // บันทึกสถานะความถูกต้องของคำตอบปัจจุบัน
-    answerStatus[questions[questionIndex].numb] = isCorrect;
 }
 
 //function ข้อต่อไป + เพิ่มคะแนน
 nextBtn.onclick = () => {
+
     if (selectedAnswer || selectedOption4.length > 0 || selectMultiAns.length > 0) {
         const questionIndex = questionCount;
         const questionn = questions[questionIndex];
+        const corrects = questionn.answer;
         let isCorrect = false;
+        
+        const Question21 = {
+            numb: 2.1,
+            type: "Major",
+            question: "มืผื่นลักษณะนี้มานานหรือยัง",
+            options: [
+                "1-2 สัปดาห์",
+                "3-4 สัปดาห์",
+                "1-3 เดือน",
+                "3-6 เดือน"
+            ],
+            answer: [
+                "3-6 เดือน"
+            ]
+        }
 
-        if (questionn.numb === 2) {
-            if (userAnswers[questionIndex] === "เป็นผื่นลักษณะนี้ครั้งแรก") {
-                // เพิ่มข้อ 2.1 หากยังไม่มี
-                const exists = questions.some(q => q.numb === 2.1);
-                if (!exists) {
-                    questions.splice(questionIndex + 1, 0, Question21);
-                }
-            } else {
-                // ลบข้อ 2.1 หากมี
-                const indexToRemove = questions.findIndex(q => q.numb === 2.1);
-                if (indexToRemove !== -1) {
-                    
-                    // ถ้าเคยตอบข้อ 2.1 ไปแล้ว ให้ลบคะแนนออก
-                    if (answerStatus[questions[indexToRemove].numb]) {
+        
+        if (userAnswers[2] === "เป็นผื่นลักษณะนี้ครั้งแรก" && questionIndex === 2) {
+            const exists = questions.some(q => q.numb === 2.1)
+            if(!exists) {
+                questions.splice(3, 0, Question21);
+            }
+        } else if (userAnswers[2] !== "เป็นผื่นลักษณะนี้ครั้งแรก" && questionIndex === 2) {
+            // หา index ของข้อ 2.1
+            const indexToRemove = questions.findIndex(q => q.numb === 2.1);
+            
+            // ถ้าเจอข้อ 2.1 ให้ลบออกและรีเซ็ตคะแนน
+            if (indexToRemove !== -1) {
+                // ตรวจสอบว่าข้อ 2.1 เคยถูกตอบไปแล้วหรือไม่
+                if (answerStatus[indexToRemove]) {
+                    if (questions[indexToRemove].type === "Major") {
                         Major--;
-                        console.log("ลบคะแนนที่ได้ข้อ 2.1:") 
-                        delete answerStatus[questions[indexToRemove].numb];
-                        delete userAnswers[questions[indexToRemove].numb];
                     }
-                    
-                    // ลบข้อ 2.1 ออกจาก questions
-                    questions.splice(indexToRemove, 1);
+                    // ลบสถานะคำตอบของข้อ 2.1
+                    delete answerStatus[indexToRemove];
+                    delete userAnswers[indexToRemove];
+                }
+                questions.splice(indexToRemove, 1);
+            }
+        }
+
+        if (questionIndex === 3 && selectMultiAns.length > 0) {
+            if (year.includes("> 2 ปี")) {
+                questions[3].answer = ["ใบหน้า/แก้ม", "ด้านนอกของแขน และ ขา"];
+            } else if (year.includes("< 2 ปี")) {
+                questions[3].answer = ["ข้อพับแขน", "ข้อพับขา"];
+            } 
+            isCorrect = selectMultiAns.some(ans => questions[3].answer.includes(ans.querySelector('span').textContent));
+        } else if (corrects.includes(userAnswers[questionIndex])) {
+            isCorrect = true;
+        }
+        
+        if (selectedOption4.length > 0) {
+            const Selecttion4 = selectedOption4.find(opt => opt.querySelector('span').textContent === "ไม่มีประวัติภูมิแพ้");
+            if (Selecttion4) {
+                isCorrect = false
+            } else if (selectedOption4.length > 0) {
+                isCorrect = true;
+            } else {
+                isCorrect = false;
+            }
+        }
+
+        if (selectMultiAns.length > 0 && questionIndex !== 3) {
+            const Selecttion1 = selectMultiAns.find(opt => opt.querySelector('span').textContent === "ไม่มีอาการดังกล่าว")
+            if (Selecttion1) {
+                isCorrect = false; // "ไม่มีอาการดังกล่าว" ไม่ได้ให้คะแนนเพิ่ม
+            } else if (selectMultiAns.length > 0) {
+                isCorrect = true;
+            } else {
+                isCorrect = false;
+            }
+        }
+
+        // ตรวจสอบว่าเคยตอบคำถามนี้มาก่อนหรือไม่
+        if (answerStatus.hasOwnProperty(questionIndex)) {
+            const previousCorrectness = answerStatus[questionIndex];
+
+            if (previousCorrectness) { // คำตอบเดิมถูก
+                if (!isCorrect) { // คำตอบใหม่ผิด (หรือไม่มีคำตอบ)
+                    if (questionn.type === "Major") {
+                        Major--;
+                        console.log({questionIndex}, ":Major ลดลง:", Major);
+                    } else {
+                        Minor--; 
+                        console.log({questionIndex}, ":Minor ลดลง:", Minor);
+                    }
+                } // ถ้าคำตอบใหม่ยังถูก ก็ไม่ต้องทำอะไร (คะแนนเท่าเดิม)
+            } else { // คำตอบเดิมผิด
+                if (isCorrect) { // คำตอบใหม่ถูก
+                    if (questionn.type === "Major") {
+                        Major++; 
+                        console.log({questionIndex}, ":Major เพิ่มขึ้น:", Major);
+                    } else {
+                        Minor++; 
+                        console.log({questionIndex}, ":Minor เพิ่มขึ้น:", Minor);
+                    }
+                } // ถ้าคำตอบใหม่ยังผิด ก็ไม่ต้องทำอะไร (คะแนนเท่าเดิม)
+            }
+        } else { // เป็นคำถามใหม่ (ยังไม่เคยตอบ)
+            if (isCorrect) {
+                if (questionn.type === "Major") {
+                    Major++; 
+                    console.log({questionIndex}, ":Major เพิ่มขึ้น (ครั้งแรก):", Major);
+                } else {
+                    Minor++; 
+                    console.log({questionIndex}, ":Minor เพิ่มขึ้น (ครั้งแรก):", Minor);
                 }
             }
         }
 
-        // ตรวจสอบความถูกต้องของคำตอบ
-        if (questionn.numb === 1) {
-            const Secttion1 = selectMultiAns.some(opt => opt.querySelector('span').textContent === "ไม่มีอาการดังกล่าว");
-            if (Secttion1) {
-                isCorrect = false; // ถ้าเลือก "ไม่มีอาการดังกล่าว" ผิด
-            } else {
-                isCorrect = selectMultiAns.length > 0; // ถ้าเลือกอย่างอื่น (หรือหลายอย่าง) ถูก
-            }
-        } else if (questionn.numb === 2 && userAnswers[questionIndex] !== "เป็นผื่นลักษณะนี้ครั้งแรก") {
-            isCorrect = true;
-        } else if (questionn.numb === 3) {
-            if (year.includes("> 2 ปี")) {
-                questionn.answer = ["ใบหน้า/แก้ม", "ด้านนอกของแขน และ ขา"];
-            } else if (year.includes("< 2 ปี")) {
-                questionn.answer = ["ข้อพับแขน", "ข้อพับขา"];
-            }
-            isCorrect = selectMultiAns.some(ans => questionn.answer.includes(ans.querySelector('span').textContent));
-        } else if (questionn.numb === 4) {
-            const hasNoAllergy = selectedOption4.some(opt => opt.querySelector('span').textContent === "ไม่มีประวัติภูมิแพ้");
-            if (hasNoAllergy) {
-                isCorrect = false;
-            } else {
-                isCorrect = selectedOption4.length > 0;
-            }
-        } else if (Array.isArray(questionn.answer)) {
-            // คำถามที่มีหลายคำตอบอื่น ๆ (ถ้ามี)
-            isCorrect = questionn.answer.every(ans => userAnswers[questions[questionIndex].numb].includes(ans));
-        } else {
-            // คำถามแบบ single answer
-            isCorrect = questionn.answer.includes(userAnswers[questions[questionIndex].numb]);
-        }
+        // บันทึกสถานะความถูกต้องของคำตอบปัจจุบัน
+        answerStatus[questionIndex] = isCorrect;
 
-        // การจัดการคะแนน
-        updateScore(questionIndex, isCorrect);
-
-        // รีเซ็ตตัวแปร
         selectedOption4 = [];
         selectedAnswer = null;
         selectMultiAns = [];
 
-        // อัปเดตคะแนน
-        console.log(`Major: ${Major}, Minor: ${Minor}`);
-
-        // ไปยังคำถามต่อไปหรือแสดงผลลัพธ์
+        
         if (questionCount < questions.length - 1) {
             questionCount++;
             showQuestions(questionCount);
@@ -379,12 +381,11 @@ nextBtn.onclick = () => {
         } else {
             showResultBox();
         }
-
-        backBtn.classList.add('active');
     }
+
+    backBtn.classList.add('active');
+
 };
-
-
 
 //function ปุ่มย้อนกลับ
 backBtn.onclick = () => {
@@ -455,7 +456,6 @@ goHomeBtn.onclick = () => {
     Major = 0;
     userAnswers = {};
     selectedAnswer = null;
-    console.log('qeustionCount', questionCount)
     showQuestions(questionCount);
     questionCounter(questionNumb);
     
