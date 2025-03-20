@@ -425,10 +425,17 @@ tryAgainBtn.onclick = () => {
 
     questionCount = 0;
     questionNumb = 1;
+    userScore = 0;
+    selectedAnswer = null;
+    userAnswers = {};
+    answerStatus = {};
     Major = 0;
     Minor = 0;
-    userAnswers = {};
-    selectedAnswer = null;
+    year = null;
+    answeredQuestions = new Set();
+    selectedAnswers = [];
+    selectedOption4 = []; 
+    selectMultiAns = [];
     showQuestions(questionCount);
     questionCounter(questionNumb);
     
@@ -442,10 +449,17 @@ goHomeBtn.onclick = () => {
 
     questionCount = 0;
     questionNumb = 1;
-    Minor = 0;
-    Major = 0;
-    userAnswers = {};
+    userScore = 0;
     selectedAnswer = null;
+    userAnswers = {};
+    answerStatus = {};
+    Major = 0;
+    Minor = 0;
+    year = null;
+    answeredQuestions = new Set();
+    selectedAnswers = [];
+    selectedOption4 = []; 
+    selectMultiAns = [];
     showQuestions(questionCount);
     questionCounter(questionNumb);
     
