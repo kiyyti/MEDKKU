@@ -271,7 +271,6 @@ function selectAnswer(option, index) {
     } else {
         userAnswers[questions[index].numb] = option.querySelector('span').textContent;
     }
-
 }
 
 function updateScore(questionIndex, isCorrect) {
@@ -311,9 +310,6 @@ function updateScore(questionIndex, isCorrect) {
         }
     }
 
-    // alert(isCorrect)
-
-    // บันทึกสถานะความถูกต้องของคำตอบปัจจุบัน
     answerStatus[questions[questionIndex].numb] = isCorrect;
 }
 
