@@ -255,7 +255,7 @@ function selectAnswer(option, index) {
         year = option.textContent;
         if (year === "< 2 ปี") {
             console.log('คำตอบข้อที่ 0 คุณคือ < 2 ปี')
-            console.log("\tคำตอบข้อ 3 คือ ข้อพับแขน/ข้อพับขา")
+            console.log("\tคำตอบข้อ 3 คือ ข้อพับแขน , ข้อพับขา")
         } else if (year === "> 2 ปี") {
             console.log("คำตอบข้อที่ 0 คุณคือ > 2 ปี")
             console.log("\tคำตอบข้อ 3 คือ ใบหน้า/แก้ม , ด้านนอกของแขน/ขา")
