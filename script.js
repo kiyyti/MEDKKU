@@ -241,9 +241,6 @@ function selectMultipleAnswersForQ1(option, index) {
 
 // ฟังก์ชันเช็คคำตอบที่เลือก
 function selectAnswer(option, index) {
-    console.log("selectAnswer called for index:", index);
-    console.log("Question numb:", questions[index].numb);
-    console.log("Option text:", option.querySelector('span').textContent);
     if (selectedAnswer) {
         selectedAnswer.style.border = "";
     }
@@ -253,7 +250,6 @@ function selectAnswer(option, index) {
 
     // userAnswers[index] = option.textContent;
     userAnswers[questions[index].numb] = option.querySelector('span').textContent;
-    console.log("userAnswers after update:", userAnswers);
 
     if (questions[index].numb === 0) {
         year = option.textContent;
