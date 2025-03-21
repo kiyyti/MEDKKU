@@ -177,7 +177,7 @@ let questions = [
     },
 
     {
-        numb: 5.10,
+        numb: 5.11,
         type: "Minor",
         question: "มีประวัติแพ้อาหารหรือนม",
         options: [
@@ -188,7 +188,7 @@ let questions = [
     },
 
     {
-        numb: 5.11,
+        numb: 5.12,
         type: "Minor",
         question: "มีอาการระคายเคืองเมื่อใส่เสื้อผ้าเนื้อหยาบ",
         options: [
@@ -199,7 +199,7 @@ let questions = [
     },
 
     {
-        numb: 5.12,
+        numb: 5.13,
         type: "Minor",
         question: "มีอาการผื่นเปลี่ยนแปลงตามฤดูกาล",
         options: [
@@ -210,7 +210,7 @@ let questions = [
     },
 
     {
-        numb: 5.13,
+        numb: 5.14,
         type: "Minor",
         question: "มีรอยขาวหลังถูกขีดที่ผิวหนัง",
         options: [
@@ -221,7 +221,7 @@ let questions = [
     },
 
     {
-        numb: 5.14,
+        numb: 5.15,
         type: "Minor",
         question: "มีรอยพับเป็นเส้น บริเวณคอ",
         options: [
@@ -232,7 +232,7 @@ let questions = [
     },
 
     {
-        numb: 5.15,
+        numb: 5.16,
         type: "Minor",
         question: "ผื่นเริ่มเกิดขึ้นตั้งแต่อายุน้อยกว่า 2 ปี",
         options: [
@@ -270,12 +270,12 @@ const questionTypes = {
     5.7: "Minor",
     5.8: "Minor",
     5.9: "Minor",
-    5.10: "Minor",
     5.11: "Minor",
     5.12: "Minor",
     5.13: "Minor",
     5.14: "Minor",
-    5.15: "Minor"
+    5.15: "Minor",
+    5.16: "Minor"
     // เพิ่มคำถามอื่น ๆ ตามต้องการ
 };
 

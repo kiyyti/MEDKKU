@@ -26,22 +26,6 @@ let selectedAnswers = [];
 let selectedOption4 = []; 
 let selectMultiAns = [];
 
-function Reset() {
-    questionCount = 0;
-    questionNumb = 1;
-    userScore = 0;
-    selectedAnswer = null;
-    userAnswers = {};
-    answerStatus = {};
-    Major = 0;
-    Minor = 0;
-    year
-    answeredQuestions = new Set();
-    selectedAnswers = [];
-    selectedOption4 = []; 
-    selectMultiAns = [];
-}
-
 //function แสดงคำถาม loop คำถามแต่ละข้อจากไฟล์  questions.js
 function showQuestions(index) {
     const questionNumb = questions[index].numb
@@ -241,9 +225,6 @@ function selectMultipleAnswersForQ1(option, index) {
 
 // ฟังก์ชันเช็คคำตอบที่เลือก
 function selectAnswer(option, index) {
-    console.log("selectAnswer called for index:", index);
-    console.log("Question numb:", questions[index].numb);
-    console.log("Option text:", option.querySelector('span').textContent);
     if (selectedAnswer) {
         selectedAnswer.style.border = "";
     }
@@ -253,17 +234,9 @@ function selectAnswer(option, index) {
 
     // userAnswers[index] = option.textContent;
     userAnswers[questions[index].numb] = option.querySelector('span').textContent;
-    console.log("userAnswers after update:", userAnswers);
 
     if (questions[index].numb === 0) {
         year = option.textContent;
-        if (year === "< 2 ปี") {
-            console.log('คำตอบข้อที่ 0 คุณคือ < 2 ปี')
-            console.log("\tคำตอบข้อ 3 คือ ข้อพับแขน/ข้อพับขา")
-        } else if (year === "> 2 ปี") {
-            console.log("คำตอบข้อที่ 0 คุณคือ > 2 ปี")
-            console.log("\tคำตอบข้อ 3 คือ ใบหน้า/แก้ม , ด้านนอกของแขน/ขา")
-        }
     }
 
     if (questions[index].numb === 1 || questions[index].numb === 3 || questions[index].numb === 4) {
@@ -411,6 +384,8 @@ nextBtn.onclick = () => {
     }
 };
 
+
+
 //function ปุ่มย้อนกลับ
 backBtn.onclick = () => {
     if (questionCount > 0) {
@@ -457,8 +432,19 @@ tryAgainBtn.onclick = () => {
     nextBtn.classList.remove('active');
     resultBox.classList.remove('active');
 
-    console.log('ทำอีกครั้ง')
-    Reset();
+    questionCount = 0;
+    questionNumb = 1;
+    userScore = 0;
+    selectedAnswer = null;
+    userAnswers = {};
+    answerStatus = {};
+    Major = 0;
+    Minor = 0;
+    year = null;
+    answeredQuestions = new Set();
+    selectedAnswers = [];
+    selectedOption4 = []; 
+    selectMultiAns = [];
     showQuestions(questionCount);
     questionCounter(questionNumb);
     
@@ -470,8 +456,20 @@ goHomeBtn.onclick = () => {
     nextBtn.classList.remove('active');
     resultBox.classList.remove('active');
 
-    console.log('กลับหน้าแรก')
-    Reset();
+    questionCount = 0;
+    questionNumb = 1;
+    userScore = 0;
+    selectedAnswer = null;
+    userAnswers = {};
+    answerStatus = {};
+    Major = 0;
+    Minor = 0;
+    year = null;
+    answeredQuestions = new Set();
+    selectedAnswers = [];
+    selectedOption4 = []; 
+    selectMultiAns = [];
+    console.log('qeustionCount', questionCount)
     showQuestions(questionCount);
     questionCounter(questionNumb);
     
